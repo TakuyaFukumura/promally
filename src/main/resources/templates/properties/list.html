@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物件一覧 - Promally</title>
+    <link href="https://unpkg.com/tailwindcss@^3/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <!-- ヘッダー -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-center">
+                <h1 class="text-3xl font-bold text-gray-800">物件管理</h1>
+                <a href="/properties/new" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                    新規物件登録
+                </a>
+            </div>
+            
+            <!-- 統計情報 -->
+            <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded">
+                    <div class="text-yellow-800">
+                        <span class="font-medium">検討中:</span> 
+                        <span class="text-xl font-bold" th:text="${consideringCount}">0</span>件
+                    </div>
+                </div>
+                <div class="bg-green-50 border-l-4 border-green-400 p-4 rounded">
+                    <div class="text-green-800">
+                        <span class="font-medium">所有中:</span> 
+                        <span class="text-xl font-bold" th:text="${ownedCount}">0</span>件
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 検索・フィルター -->
+        <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- 検索フォーム -->
+                <form method="get" action="/properties" class="flex gap-2">
+                    <input type="text" name="search" th:value="${searchQuery}" 
+                           placeholder="物件名で検索..." 
+                           class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200">
+                        検索
+                    </button>
+                </form>
+                
+                <!-- ステータスフィルター -->
+                <div class="flex gap-2">
+                    <a href="/properties" 
+                       th:classappend="${selectedStatus == null} ? 'bg-gray-600' : 'bg-gray-400'"
+                       class="text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200">
+                        全て
+                    </a>
+                    <a th:each="status : ${statuses}" 
+                       th:href="@{/properties(status=${status.name()})}"
+                       th:text="${status.displayName}"
+                       th:classappend="${selectedStatus == status.name()} ? 
+                                      (${status.name()} == 'CONSIDERING' ? 'bg-yellow-600' : 'bg-green-600') : 
+                                      (${status.name()} == 'CONSIDERING' ? 'bg-yellow-400' : 'bg-green-400')"
+                       class="text-white px-4 py-2 rounded-lg hover:opacity-80 transition duration-200">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- メッセージ表示 -->
+        <div th:if="${successMessage}" class="bg-green-50 border-l-4 border-green-400 p-4 rounded mb-6">
+            <p class="text-green-800" th:text="${successMessage}"></p>
+        </div>
+        <div th:if="${errorMessage}" class="bg-red-50 border-l-4 border-red-400 p-4 rounded mb-6">
+            <p class="text-red-800" th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- 物件一覧 -->
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden">
+            <div th:if="${#lists.isEmpty(properties)}" class="p-8 text-center text-gray-500">
+                物件が見つかりませんでした。
+            </div>
+            
+            <div th:unless="${#lists.isEmpty(properties)}" class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">物件名</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">住所</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">賃料</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">面積</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">間取り</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ステータス</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr th:each="property : ${properties}" class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <a th:href="@{/properties/{id}(id=${property.id})}" 
+                                   class="text-blue-600 hover:text-blue-800 font-medium"
+                                   th:text="${property.name}"></a>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${property.address}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <span th:if="${property.rent != null}" th:text="${#numbers.formatDecimal(property.rent, 0, 0)} + '円'"></span>
+                                <span th:unless="${property.rent != null}">-</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                <span th:if="${property.area != null}" th:text="${property.area} + '㎡'"></span>
+                                <span th:unless="${property.area != null}">-</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900" th:text="${property.layout ?: '-'}"></td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span th:class="${property.status.name() == 'CONSIDERING'} ? 
+                                                'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800' : 
+                                                'inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800'"
+                                      th:text="${property.status.displayName}"></span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <a th:href="@{/properties/{id}/edit(id=${property.id})}" 
+                                   class="text-indigo-600 hover:text-indigo-900 mr-3">編集</a>
+                                <form th:action="@{/properties/{id}/delete(id=${property.id})}" method="post" class="inline">
+                                    <button type="submit" 
+                                            onclick="return confirm('この物件を削除してもよろしいですか？')"
+                                            class="text-red-600 hover:text-red-900">削除</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="mt-8 text-center">
+            <a href="/" class="text-blue-600 hover:text-blue-800">← ホームに戻る</a>
+        </div>
+    </div>
+</body>
+</html>

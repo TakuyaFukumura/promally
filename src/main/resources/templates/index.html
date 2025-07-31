@@ -3,19 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index</title>
+    <title>Promally - 賃貸管理アプリ</title>
     <!-- Tailwind CSS CDN -->
     <link href="https://unpkg.com/tailwindcss@^3/dist/tailwind.min.css" rel="stylesheet">
     <!-- Fallback CSS -->
     <link href="/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 min-h-screen flex items-center justify-center">
-    <div class="container bg-white rounded-lg shadow-lg p-8 max-w-md w-full mx-4">
-        <h1 class="title text-3xl font-bold text-gray-800 mb-6 text-center">Index</h1>
-        <div class="message-box bg-blue-50 border-l-4 border-blue-400 p-4 rounded">
+    <div class="container bg-white rounded-lg shadow-lg p-8 max-w-lg w-full mx-4">
+        <h1 class="title text-3xl font-bold text-gray-800 mb-6 text-center">Promally</h1>
+        <p class="text-center text-gray-600 mb-6">賃貸管理アプリ</p>
+        
+        <div class="message-box bg-blue-50 border-l-4 border-blue-400 p-4 rounded mb-6">
             <p class="message-text text-lg text-blue-800 font-medium" th:text="${message}"></p>
         </div>
-        <div class="footer mt-6 text-center">
+        
+        <!-- メニューリンク -->
+        <div class="space-y-3">
+            <a href="/properties" class="block w-full bg-blue-500 hover:bg-blue-600 text-white text-center py-3 px-4 rounded-lg transition duration-200 font-medium">
+                物件管理
+            </a>
+            <div class="text-center text-sm text-gray-500">
+                物件の登録・編集・検索ができます
+            </div>
+        </div>
+        
+        <div class="footer mt-8 text-center">
             <span class="text-sm text-gray-500">Powered by Spring Boot & Tailwind CSS</span>
         </div>
     </div>
