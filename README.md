@@ -1,8 +1,5 @@
-# basic-spring-boot-app
-SpringBootアプリ開発の元となるリポジトリ
-
-## 資料
-- https://spring.pleiades.io/spring-boot/docs/current/reference/html/getting-started.html
+# promally
+賃貸管理アプリ
 
 ## Docker開発環境セットアップ
 
@@ -63,5 +60,5 @@ docker compose build --no-cache
 ./mvnw clean package
 ```
 ```bash
-java -jar target/myproject.jar
+java -jar target/promally.jar
 ```
