@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${property.id != null} ? '物件編集' : '新規物件登録'">物件登録 - Promally</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <!-- ヘッダー -->
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold text-dark" th:text="${property.id != null} ? '物件編集' : '新規物件登録'"></h1>
+            <a href="/properties" class="btn btn-secondary">
+                一覧に戻る
+            </a>
+        </div>
+
+        <!-- フォーム -->
+        <div class="card shadow">
+            <div class="card-body">
+                <form th:action="@{/properties/save}" method="post" th:object="${property}">
+                    <input type="hidden" th:field="*{id}" />
+                    <input type="hidden" th:field="*{createdAt}" />
+                    <input type="hidden" th:field="*{updatedAt}" />
+                    
+                    <div class="row">
+                        <!-- 左側の列 -->
+                        <div class="col-lg-6">
+                            <h3 class="h5 fw-semibold text-dark mb-4">基本情報</h3>
+                            
+                            <!-- 物件名 -->
+                            <div class="mb-3">
+                                <label for="name" class="form-label">
+                                    物件名 <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="name" th:field="*{name}" required
+                                       class="form-control"
+                                       placeholder="例: サンプル戸建A">
+                            </div>
+
+                            <!-- 住所 -->
+                            <div class="mb-3">
+                                <label for="address" class="form-label">
+                                    住所 <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" id="address" th:field="*{address}" required
+                                       class="form-control"
+                                       placeholder="例: 東京都世田谷区桜丘1-1-1">
+                            </div>
+
+                            <!-- ステータス -->
+                            <div class="mb-3">
+                                <label for="status" class="form-label">
+                                    ステータス <span class="text-danger">*</span>
+                                </label>
+                                <select id="status" th:field="*{status}" required class="form-select">
+                                    <option value="">選択してください</option>
+                                    <option th:each="status : ${statuses}" 
+                                            th:value="${status}" 
+                                            th:text="${status.displayName}"></option>
+                                </select>
+                            </div>
+
+                            <!-- 賃料 -->
+                            <div class="mb-3">
+                                <label for="rent" class="form-label">賃料（円）</label>
+                                <input type="number" id="rent" th:field="*{rent}" min="0"
+                                       class="form-control"
+                                       placeholder="例: 150000">
+                            </div>
+
+                            <!-- 面積 -->
+                            <div class="mb-3">
+                                <label for="area" class="form-label">面積（㎡）</label>
+                                <input type="number" id="area" th:field="*{area}" min="0" step="0.01"
+                                       class="form-control"
+                                       placeholder="例: 85.50">
+                            </div>
+                        </div>
+
+                        <!-- 右側の列 -->
+                        <div class="col-lg-6">
+                            <h3 class="h5 fw-semibold text-dark mb-4">詳細情報</h3>
+                            
+                            <!-- 築年数 -->
+                            <div class="mb-3">
+                                <label for="buildingAge" class="form-label">築年数</label>
+                                <input type="number" id="buildingAge" th:field="*{buildingAge}" min="0"
+                                       class="form-control"
+                                       placeholder="例: 15">
+                            </div>
+
+                            <!-- 間取り -->
+                            <div class="mb-3">
+                                <label for="layout" class="form-label">間取り</label>
+                                <input type="text" id="layout" th:field="*{layout}"
+                                       class="form-control"
+                                       placeholder="例: 3LDK">
+                            </div>
+
+                            <!-- 説明・備考 -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label">説明・備考</label>
+                                <textarea id="description" th:field="*{description}" rows="8"
+                                          class="form-control"
+                                          placeholder="物件の詳細な説明や特徴、周辺環境などを入力してください..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ボタン -->
+                    <div class="border-top pt-4 mt-4">
+                        <div class="d-flex justify-content-end gap-3">
+                            <a href="/properties" class="btn btn-secondary">
+                                キャンセル
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <span th:text="${property.id != null} ? '更新' : '登録'"></span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 注意事項 -->
+        <div class="alert alert-info border-start border-primary border-4 mt-4">
+            <p class="mb-0">
+                <span class="text-danger">*</span> マークの付いた項目は必須入力です。
+            </p>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ja" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>物件一覧 - Promally</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container py-5">
+        <!-- ヘッダー -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h1 class="h2 fw-bold text-dark mb-0">物件管理</h1>
+                    <a href="/properties/new" class="btn btn-primary">
+                        新規物件登録
+                    </a>
+                </div>
+                
+                <!-- 統計情報 -->
+                <div class="row mt-4">
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-warning-subtle border-start border-warning border-4">
+                            <div class="card-body">
+                                <div class="text-warning-emphasis">
+                                    <span class="fw-medium">検討中:</span> 
+                                    <span class="h4 fw-bold" th:text="${consideringCount}">0</span>件
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card bg-success-subtle border-start border-success border-4">
+                            <div class="card-body">
+                                <div class="text-success-emphasis">
+                                    <span class="fw-medium">所有中:</span> 
+                                    <span class="h4 fw-bold" th:text="${ownedCount}">0</span>件
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 検索・フィルター -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="row">
+                    <!-- 検索フォーム -->
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <form method="get" action="/properties" class="d-flex gap-2">
+                            <input type="text" name="search" th:value="${searchQuery}" 
+                                   placeholder="物件名で検索..." 
+                                   class="form-control">
+                            <button type="submit" class="btn btn-primary">
+                                検索
+                            </button>
+                        </form>
+                    </div>
+                    
+                    <!-- ステータスフィルター -->
+                    <div class="col-md-6">
+                        <div class="d-flex gap-2 flex-wrap">
+                            <a href="/properties" 
+                               th:classappend="${selectedStatus == null} ? 'btn-secondary' : 'btn-outline-secondary'"
+                               class="btn btn-sm">
+                                全て
+                            </a>
+                            <a th:each="status : ${statuses}" 
+                               th:href="@{/properties(status=${status.name()})}"
+                               th:text="${status.displayName}"
+                               th:classappend="${selectedStatus == status.name()} ? 
+                                              (${status.name()} == 'CONSIDERING' ? 'btn-warning' : 'btn-success') : 
+                                              (${status.name()} == 'CONSIDERING' ? 'btn-outline-warning' : 'btn-outline-success')"
+                               class="btn btn-sm">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- メッセージ表示 -->
+        <div th:if="${successMessage}" class="alert alert-success border-start border-success border-4 mb-4">
+            <p class="mb-0" th:text="${successMessage}"></p>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger border-start border-danger border-4 mb-4">
+            <p class="mb-0" th:text="${errorMessage}"></p>
+        </div>
+
+        <!-- 物件一覧 -->
+        <div class="card shadow">
+            <div th:if="${#lists.isEmpty(properties)}" class="card-body text-center py-5">
+                <p class="text-muted mb-0">物件が見つかりませんでした。</p>
+            </div>
+            
+            <div th:unless="${#lists.isEmpty(properties)}" class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">物件名</th>
+                            <th scope="col">住所</th>
+                            <th scope="col">賃料</th>
+                            <th scope="col">面積</th>
+                            <th scope="col">間取り</th>
+                            <th scope="col">ステータス</th>
+                            <th scope="col">操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="property : ${properties}">
+                            <td>
+                                <a th:href="@{/properties/{id}(id=${property.id})}" 
+                                   class="text-decoration-none fw-medium"
+                                   th:text="${property.name}"></a>
+                            </td>
+                            <td class="text-muted" th:text="${property.address}"></td>
+                            <td>
+                                <span th:if="${property.rent != null}" th:text="${#numbers.formatDecimal(property.rent, 0, 0)} + '円'"></span>
+                                <span th:unless="${property.rent != null}" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${property.area != null}" th:text="${property.area} + '㎡'"></span>
+                                <span th:unless="${property.area != null}" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span th:if="${property.layout}" th:text="${property.layout}"></span>
+                                <span th:unless="${property.layout}" class="text-muted">-</span>
+                            </td>
+                            <td>
+                                <span th:class="${property.status.name() == 'CONSIDERING'} ? 
+                                                'badge bg-warning text-dark' : 
+                                                'badge bg-success'"
+                                      th:text="${property.status.displayName}"></span>
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{/properties/{id}/edit(id=${property.id})}" 
+                                       class="btn btn-sm btn-outline-primary">編集</a>
+                                    <form th:action="@{/properties/{id}/delete(id=${property.id})}" method="post" class="d-inline">
+                                        <button type="submit" 
+                                                onclick="return confirm('この物件を削除してもよろしいですか？')"
+                                                class="btn btn-sm btn-outline-danger">削除</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- フッター -->
+        <div class="text-center mt-4">
+            <a href="/" class="text-decoration-none">← ホームに戻る</a>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
