@@ -24,6 +24,7 @@ public class PropertyService {
 
     /**
      * 全ての物件を取得
+     *
      * @return 全物件のリスト
      */
     public List<Property> getAllProperties() {
@@ -32,6 +33,7 @@ public class PropertyService {
 
     /**
      * IDで物件を検索
+     *
      * @param id 物件ID
      * @return 物件情報（存在しない場合はOptional.empty()）
      */
@@ -41,6 +43,7 @@ public class PropertyService {
 
     /**
      * ステータス別に物件を検索
+     *
      * @param status 物件ステータス
      * @return ステータスに一致する物件のリスト
      */
@@ -50,6 +53,7 @@ public class PropertyService {
 
     /**
      * 物件名で検索
+     *
      * @param name 物件名
      * @return 名前に部分一致する物件のリスト
      */
@@ -59,6 +63,7 @@ public class PropertyService {
 
     /**
      * 物件を保存（新規登録・更新）
+     *
      * @param property 保存する物件情報
      * @return 保存された物件情報
      */
@@ -68,6 +73,7 @@ public class PropertyService {
 
     /**
      * 物件を削除
+     *
      * @param id 削除する物件のID
      */
     public void deleteProperty(Long id) {
@@ -76,6 +82,7 @@ public class PropertyService {
 
     /**
      * 検討中の物件数を取得
+     *
      * @return 検討中の物件数
      */
     public long getConsideringPropertiesCount() {
@@ -84,6 +91,7 @@ public class PropertyService {
 
     /**
      * 所有中の物件数を取得
+     *
      * @return 所有中の物件数
      */
     public long getOwnedPropertiesCount() {

@@ -1,14 +1,17 @@
 package com.example.myapplication.entity;
 
+import lombok.Getter;
+
 /**
  * 物件のステータスを表す列挙型
  */
+@Getter
 public enum PropertyStatus {
     /**
      * 検討中
      */
     CONSIDERING("検討中"),
-    
+
     /**
      * 所有中
      */
@@ -20,7 +23,4 @@ public enum PropertyStatus {
         this.displayName = displayName;
     }
 
-    public String getDisplayName() {
-        return displayName;
-    }
 }
