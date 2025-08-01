@@ -4,140 +4,141 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>物件詳細 - Promally</title>
-    <link href="https://unpkg.com/tailwindcss@^3/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="container mx-auto px-4 py-8">
+<body class="bg-light">
+    <div class="container py-5">
         <!-- ヘッダー -->
-        <div class="mb-6">
-            <div class="flex justify-between items-center">
-                <h1 class="text-3xl font-bold text-gray-800">物件詳細</h1>
-                <div class="space-x-2">
-                    <a th:href="@{/properties/{id}/edit(id=${property.id})}" 
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                        編集
-                    </a>
-                    <a href="/properties" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                        一覧に戻る
-                    </a>
-                </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h2 fw-bold text-dark">物件詳細</h1>
+            <div class="d-flex gap-2">
+                <a th:href="@{/properties/{id}/edit(id=${property.id})}" 
+                   class="btn btn-primary">
+                    編集
+                </a>
+                <a href="/properties" class="btn btn-secondary">
+                    一覧に戻る
+                </a>
             </div>
         </div>
 
         <!-- 物件情報 -->
-        <div class="bg-white rounded-lg shadow-lg p-6">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <!-- 基本情報 -->
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">基本情報</h2>
-                    <div class="space-y-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">物件名</label>
-                            <p class="mt-1 text-lg text-gray-900" th:text="${property.name}"></p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">住所</label>
-                            <p class="mt-1 text-gray-900" th:text="${property.address}"></p>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">ステータス</label>
-                            <span th:class="${property.status.name() == 'CONSIDERING'} ? 
-                                            'inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-yellow-100 text-yellow-800' : 
-                                            'inline-flex px-3 py-1 text-sm font-semibold rounded-full bg-green-100 text-green-800'"
-                                  th:text="${property.status.displayName}"></span>
+        <div class="card shadow">
+            <div class="card-body">
+                <div class="row">
+                    <!-- 基本情報 -->
+                    <div class="col-lg-6">
+                        <h3 class="h5 fw-semibold text-dark mb-4">基本情報</h3>
+                        <div class="row g-4">
+                            <div class="col-12">
+                                <label class="form-label text-muted">物件名</label>
+                                <p class="h5 mb-0" th:text="${property.name}"></p>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label text-muted">住所</label>
+                                <p class="mb-0" th:text="${property.address}"></p>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label class="form-label text-muted">ステータス</label>
+                                <div>
+                                    <span th:class="${property.status.name() == 'CONSIDERING'} ? 
+                                                    'badge bg-warning text-dark fs-6' : 
+                                                    'badge bg-success fs-6'"
+                                          th:text="${property.status.displayName}"></span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- 詳細情報 -->
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800 mb-4">詳細情報</h2>
-                    <div class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">賃料</label>
-                                <p class="mt-1 text-gray-900">
+                    <!-- 詳細情報 -->
+                    <div class="col-lg-6">
+                        <h3 class="h5 fw-semibold text-dark mb-4">詳細情報</h3>
+                        <div class="row g-4">
+                            <div class="col-6">
+                                <label class="form-label text-muted">賃料</label>
+                                <p class="mb-0">
                                     <span th:if="${property.rent != null}" th:text="${#numbers.formatDecimal(property.rent, 0, 0)} + '円'"></span>
-                                    <span th:unless="${property.rent != null}" class="text-gray-500">未設定</span>
+                                    <span th:unless="${property.rent != null}" class="text-muted">未設定</span>
                                 </p>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">面積</label>
-                                <p class="mt-1 text-gray-900">
+                            <div class="col-6">
+                                <label class="form-label text-muted">面積</label>
+                                <p class="mb-0">
                                     <span th:if="${property.area != null}" th:text="${property.area} + '㎡'"></span>
-                                    <span th:unless="${property.area != null}" class="text-gray-500">未設定</span>
+                                    <span th:unless="${property.area != null}" class="text-muted">未設定</span>
                                 </p>
                             </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">築年数</label>
-                                <p class="mt-1 text-gray-900">
+                            
+                            <div class="col-6">
+                                <label class="form-label text-muted">築年数</label>
+                                <p class="mb-0">
                                     <span th:if="${property.buildingAge != null}" th:text="${property.buildingAge} + '年'"></span>
-                                    <span th:unless="${property.buildingAge != null}" class="text-gray-500">未設定</span>
+                                    <span th:unless="${property.buildingAge != null}" class="text-muted">未設定</span>
                                 </p>
                             </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">間取り</label>
-                                <p class="mt-1 text-gray-900">
+                            <div class="col-6">
+                                <label class="form-label text-muted">間取り</label>
+                                <p class="mb-0">
                                     <span th:if="${property.layout != null and property.layout != ''}" th:text="${property.layout}"></span>
-                                    <span th:unless="${property.layout != null and property.layout != ''}" class="text-gray-500">未設定</span>
+                                    <span th:unless="${property.layout != null and property.layout != ''}" class="text-muted">未設定</span>
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- 説明・備考 -->
-            <div class="mt-6">
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">説明・備考</h2>
-                <div class="bg-gray-50 rounded-lg p-4">
-                    <p th:if="${property.description != null and property.description != ''}" 
-                       class="text-gray-900 whitespace-pre-wrap" th:text="${property.description}"></p>
-                    <p th:unless="${property.description != null and property.description != ''}" 
-                       class="text-gray-500 italic">説明が入力されていません。</p>
-                </div>
-            </div>
-
-            <!-- 登録・更新日時 -->
-            <div class="mt-6 pt-6 border-t border-gray-200">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-                    <div>
-                        <span class="font-medium">登録日時:</span>
-                        <span th:text="${#temporals.format(property.createdAt, 'yyyy年MM月dd日 HH:mm')}"></span>
-                    </div>
-                    <div>
-                        <span class="font-medium">更新日時:</span>
-                        <span th:text="${#temporals.format(property.updatedAt, 'yyyy年MM月dd日 HH:mm')}"></span>
+                <!-- 説明・備考 -->
+                <div class="mt-4">
+                    <h3 class="h5 fw-semibold text-dark mb-3">説明・備考</h3>
+                    <div class="bg-light rounded p-3">
+                        <p th:if="${property.description != null and property.description != ''}" 
+                           class="mb-0" th:text="${property.description}" style="white-space: pre-wrap;"></p>
+                        <p th:unless="${property.description != null and property.description != ''}" 
+                           class="text-muted fst-italic mb-0">説明が入力されていません。</p>
                     </div>
                 </div>
-            </div>
 
-            <!-- 操作ボタン -->
-            <div class="mt-6 pt-6 border-t border-gray-200 flex justify-between">
-                <form th:action="@{/properties/{id}/delete(id=${property.id})}" method="post" class="inline">
-                    <button type="submit" 
-                            onclick="return confirm('この物件を削除してもよろしいですか？削除した物件は復元できません。')"
-                            class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                        削除
-                    </button>
-                </form>
-                
-                <div class="space-x-2">
-                    <a th:href="@{/properties/{id}/edit(id=${property.id})}" 
-                       class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                        編集
-                    </a>
-                    <a href="/properties" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg transition duration-200">
-                        一覧に戻る
-                    </a>
+                <!-- 登録・更新日時 -->
+                <div class="border-top pt-4 mt-4">
+                    <div class="row text-muted small">
+                        <div class="col-md-6 mb-2">
+                            <span class="fw-medium">登録日時:</span>
+                            <span th:text="${#temporals.format(property.createdAt, 'yyyy年MM月dd日 HH:mm')}"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <span class="fw-medium">更新日時:</span>
+                            <span th:text="${#temporals.format(property.updatedAt, 'yyyy年MM月dd日 HH:mm')}"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 操作ボタン -->
+                <div class="border-top pt-4 mt-4 d-flex justify-content-between">
+                    <form th:action="@{/properties/{id}/delete(id=${property.id})}" method="post" class="d-inline">
+                        <button type="submit" 
+                                onclick="return confirm('この物件を削除してもよろしいですか？削除した物件は復元できません。')"
+                                class="btn btn-danger">
+                            削除
+                        </button>
+                    </form>
+                    
+                    <div class="d-flex gap-2">
+                        <a th:href="@{/properties/{id}/edit(id=${property.id})}" 
+                           class="btn btn-primary">
+                            編集
+                        </a>
+                        <a href="/properties" class="btn btn-secondary">
+                            一覧に戻る
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+    
+    <!-- Bootstrap JS CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

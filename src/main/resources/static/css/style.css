@@ -1,50 +1,68 @@
-/* Basic styling inspired by Tailwind CSS for fallback */
+/* Custom styles for Bootstrap integration */
 body {
-    background-color: #f3f4f6;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
+/* Enhanced card shadows */
+.card {
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+.card.shadow {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Custom spacing for better visual hierarchy */
 .container {
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 2rem;
-    max-width: 28rem;
-    width: 100%;
-    margin: 0 1rem;
+    max-width: 1200px;
 }
 
-.title {
-    font-size: 1.875rem;
-    font-weight: bold;
-    color: #1f2937;
-    margin-bottom: 1.5rem;
-    text-align: center;
+/* Form enhancements */
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-.message-box {
-    background-color: #dbeafe;
-    border-left: 4px solid #3b82f6;
-    padding: 1rem;
-    border-radius: 0.25rem;
-    margin-bottom: 1.5rem;
+.form-select:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
 }
 
-.message-text {
-    font-size: 1.125rem;
-    color: #1e3a8a;
-    font-weight: 500;
-    margin: 0;
+/* Table hover effects */
+.table tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.05);
 }
 
-.footer {
-    text-align: center;
+/* Badge size adjustments */
+.badge.fs-6 {
+    font-size: 0.875rem !important;
+}
+
+/* Button spacing in action columns */
+.btn-group-sm > .btn, .btn-sm {
+    padding: 0.25rem 0.5rem;
     font-size: 0.875rem;
-    color: #6b7280;
-    margin-top: 1.5rem;
+}
+
+/* Alert with custom borders */
+.alert {
+    border-width: 0 0 0 4px;
+}
+
+/* Custom background for better contrast */
+.bg-light {
+    background-color: #f8f9fa !important;
+}
+
+/* Responsive text sizes */
+@media (max-width: 768px) {
+    .h2 {
+        font-size: 1.5rem;
+    }
+    
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
 }
